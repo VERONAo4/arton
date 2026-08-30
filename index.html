@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>ARTORA — Premium Art Store</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f7f6f2;
+    color:#111;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button,
+a{
+    -webkit-tap-highlight-color:transparent;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* NAVBAR */
+
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#fff;
+    border-bottom:1px solid #ddd;
+    min-height:75px;
+    padding:15px 5%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.logo{
+    font-size:27px;
+    font-weight:900;
+    letter-spacing:5px;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+.nav-links button,
+.nav-links a{
+    border:0;
+    background:none;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:700;
+}
+
+.cart-link{
+    background:#111!important;
+    color:#fff!important;
+    padding:10px 15px;
+}
+
+/* PAGES */
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* HERO */
+
+.hero{
+    min-height:650px;
+    padding:8%;
+    display:flex;
+    align-items:center;
+    background:linear-gradient(110deg,#e2e1dc,#fff);
+}
+
+.hero-content{
+    max-width:700px;
+}
+
+.eyebrow{
+    font-size:11px;
+    letter-spacing:5px;
+    color:#666;
+    font-weight:bold;
+}
+
+.hero h1{
+    font-size:clamp(55px,9vw,110px);
+    line-height:.88;
+    margin:20px 0 30px;
+}
+
+.hero p{
+    max-width:600px;
+    line-height:1.7;
+    font-size:18px;
+}
+
+/* BUTTON */
+
+.button{
+    border:0;
+    background:#111;
+    color:#fff;
+    padding:14px 24px;
+    display:inline-block;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.button:hover{
+    opacity:.75;
+}
+
+/* SECTIONS */
+
+.section{
+    padding:75px 6%;
+}
+
+.section-title{
+    font-size:35px;
+    margin:0 0 35px;
+}
+
+.section-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+/* CATEGORIES */
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.category-card{
+    height:270px;
+    padding:25px;
+    display:flex;
+    align-items:flex-end;
+    background:linear-gradient(145deg,#ddd,#aaa);
+    font-size:22px;
+    font-weight:900;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.category-card:hover{
+    transform:translateY(-7px);
+}
+
+/* PRODUCTS */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:25px;
+}
+
+.product-card{
+    background:#fff;
+    border:1px solid #eee;
+    overflow:hidden;
+    transition:.25s;
+}
+
+.product-card:hover{
+    transform:translateY(-5px);
+}
+
+.product-card img{
+    width:100%;
+    aspect-ratio:1/1.25;
+    object-fit:cover;
+    display:block;
+}
+
+.product-info{
+    padding:18px;
+}
+
+.product-category{
+    font-size:10px;
+    color:#777;
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.product-info h3{
+    margin:9px 0;
+    font-size:18px;
+}
+
+.price{
+    font-size:18px;
+    font-weight:900;
+}
+
+.product-actions{
+    margin-top:15px;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.small-button{
+    border:0;
+    background:#111;
+    color:#fff;
+    padding:10px 13px;
+    font-size:11px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* CATEGORY PAGE */
+
+.page-header{
+    text-align:center;
+    padding:90px 6%;
+    background:#e9e8e3;
+}
+
+.page-header h1{
+    margin:15px 0;
+    font-size:clamp(50px,8vw,90px);
+}
+
+.search{
+    width:100%;
+    max-width:600px;
+    padding:16px;
+    border:1px solid #ccc;
+    margin:0 auto 35px;
+    display:block;
+    background:#fff;
+}
+
+/* PRODUCT DETAIL */
+
+.single-product{
+    max-width:1100px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:70px;
+    align-items:center;
+}
+
+.single-product img{
+    width:100%;
+}
+
+.single-product h1{
+    font-size:50px;
+    margin:15px 0;
+}
+
+.single-product h2{
+    font-size:30px;
+}
+
+.description{
+    color:#555;
+    line-height:1.8;
+    margin:25px 0;
+}
+
+/* CART */
+
+.cart-item{
+    display:flex;
+    gap:20px;
+    align-items:center;
+    background:#fff;
+    border:1px solid #eee;
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.cart-item img{
+    width:90px;
+    height:90px;
+    object-fit:cover;
+}
+
+.cart-details{
+    flex:1;
+}
+
+.cart-total{
+    background:#fff;
+    padding:25px;
+    text-align:right;
+    font-size:24px;
+    font-weight:900;
+}
+
+/* OWNER */
+
+.owner-wrapper{
+    min-height:75vh;
+    padding:70px 6%;
+}
+
+.owner-box{
+    max-width:900px;
+    margin:0 auto 30px;
+    background:#fff;
+    padding:35px;
+    border:1px solid #eee;
+}
+
+.owner-box h1,
+.owner-box h2{
+    margin-top:0;
+}
+
+.owner-box input,
+.owner-box select,
+.owner-box textarea{
+    width:100%;
+    padding:14px;
+    border:1px solid #ccc;
+    margin-bottom:14px;
+    background:#fff;
+}
+
+.owner-box textarea{
+    min-height:130px;
+    resize:vertical;
+}
+
+.dashboard-header{
+    max-width:900px;
+    margin:0 auto 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.admin-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:12px;
+    background:#fff;
+    border:1px solid #eee;
+    margin-bottom:10px;
+}
+
+.admin-item img{
+    width:75px;
+    height:75px;
+    object-fit:cover;
+}
+
+.admin-info{
+    flex:1;
+}
+
+.delete-button{
+    border:0;
+    background:#b00020;
+    color:#fff;
+    padding:11px 14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.message{
+    margin-top:15px;
+    color:#b00020;
+}
+
+/* EMPTY */
+
+.empty{
+    background:#fff;
+    padding:70px 20px;
+    text-align:center;
+}
+
+/* FOOTER */
+
+footer{
+    background:#111;
+    color:#fff;
+    text-align:center;
+    padding:55px 6%;
+}
+
+footer p{
+    color:#aaa;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .navbar{
+        flex-direction:column;
+    }
+
+    .product-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .category-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .single-product{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:550px){
+
+    .product-grid,
+    .category-grid{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        min-height:550px;
+        padding:10%;
+    }
+
+    .hero h1{
+        font-size:55px;
+    }
+
+    .nav-links{
+        justify-content:center;
+        gap:10px;
+    }
+
+    .cart-item,
+    .admin-item{
+        flex-wrap:wrap;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================
+     NAVIGATION
+========================================= -->
+
+<header class="navbar">
+
+    <button
+        class="logo"
+        onclick="showPage('home')">
+        ARTORA
+    </button>
+
+    <nav class="nav-links">
+
+        <button onclick="showPage('home')">
+            Home
+        </button>
+
+        <button onclick="showCategory('Posters')">
+            Posters
+        </button>
+
+        <button onclick="showCategory('Drawings')">
+            Drawings
+        </button>
+
+        <button onclick="showCategory('Art Prints')">
+            Art Prints
+        </button>
+
+        <button onclick="showCategory('Notebooks')">
+            Notebooks
+        </button>
+
+        <button onclick="showPage('owner')">
+            Owner
+        </button>
+
+        <button
+            class="cart-link"
+            onclick="showPage('cart')">
+
+            Cart
+            (<span id="cartCount">0</span>)
+
+        </button>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================
+     HOME
+========================================= -->
+
+<main>
+
+<section
+    id="home"
+    class="page active">
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="eyebrow">
+                ART • DESIGN • STYLE
+            </p>
+
+            <h1>
+                ART THAT<br>
+                FEELS LIKE YOU.
+            </h1>
+
+            <p>
+                Discover premium posters,
+                drawings, art prints and
+                notebooks created to make
+                your space feel special.
+            </p>
+
+            <br>
+
+            <button
+                class="button"
+                onclick="showCategory('Posters')">
+
+                SHOP NOW
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <section class="section">
+
+        <h2 class="section-title">
+            SHOP BY CATEGORY
+        </h2>
+
+        <div class="category-grid">
+
+            <div
+                class="category-card"
+                onclick="showCategory('Posters')">
+
+                POSTERS
+
+            </div>
+
+            <div
+                class="category-card"
+                onclick="showCategory('Drawings')">
+
+                DRAWINGS
+
+            </div>
+
+            <div
+                class="category-card"
+                onclick="showCategory('Art Prints')">
+
+                ART PRINTS
+
+            </div>
+
+            <div
+                class="category-card"
+                onclick="showCategory('Notebooks')">
+
+                NOTEBOOKS
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <h2 class="section-title">
+                FEATURED PRODUCTS
+            </h2>
+
+        </div>
+
+        <div
+            id="featuredProducts"
+            class="product-grid">
+
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- =========================================
+     CATEGORY PAGE
+========================================= -->
+
+<section
+    id="category"
+    class="page">
+
+    <section class="page-header">
+
+        <p class="eyebrow">
+            ARTORA COLLECTION
+        </p>
+
+        <h1 id="categoryTitle">
+            PRODUCTS
+        </h1>
+
+        <p id="categoryDescription">
+            Explore the collection.
+        </p>
+
+    </section>
+
+
+    <section class="section">
+
+        <input
+            id="searchInput"
+            class="search"
+            type="text"
+            placeholder="Search products..."
+            oninput="filterCategoryProducts()">
+
+
+        <div
+            id="categoryProducts"
+            class="product-grid">
+
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- =========================================
+     PRODUCT DETAIL
+========================================= -->
+
+<section
+    id="product"
+    class="page">
+
+    <section class="section">
+
+        <div id="productDetail">
+
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- =========================================
+     CART
+========================================= -->
+
+<section
+    id="cart"
+    class="page">
+
+    <section class="section">
+
+        <h1>
+            YOUR CART
+        </h1>
+
+        <div id="cartContent">
+
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- =========================================
+     OWNER PAGE
+========================================= -->
+
+<section
+    id="owner"
+    class="page">
+
+    <main class="owner-wrapper">
+
+
+        <!-- LOGIN -->
+
+        <div
+            id="loginPanel"
+            class="owner-box">
+
+            <h1>
+                OWNER LOGIN
+            </h1>
+
+            <p>
+                Login with your ARTORA
+                owner account.
+            </p>
+
+
+            <form
+                id="loginForm">
+
+                <input
+                    id="ownerEmail"
+                    type="email"
+                    placeholder="Owner email"
+                    required>
+
+
+                <input
+                    id="ownerPassword"
+                    type="password"
+                    placeholder="Password"
+                    required>
+
+
+                <button
+                    class="button"
+                    type="submit">
+
+                    LOGIN
+
+                </button>
+
+            </form>
+
+
+            <p
+                id="loginMessage"
+                class="message">
+            </p>
+
+        </div>
+
+
+
+        <!-- DASHBOARD -->
+
+        <div
+            id="dashboard"
+            hidden>
+
+
+            <div class="dashboard-header">
+
+                <h1>
+                    OWNER DASHBOARD
+                </h1>
+
+                <button
+                    id="logoutButton"
+                    class="button">
+
+                    LOGOUT
+
+                </button>
+
+            </div>
+
+
+
+            <!-- ADD PRODUCT -->
+
+            <div class="owner-box">
+
+                <h2>
+                    ADD PRODUCT
+                </h2>
+
+
+                <form
+                    id="productForm">
+
+
+                    <input
+                        id="productName"
+                        type="text"
+                        placeholder="Product name"
+                        required>
+
+
+                    <input
+                        id="productPrice"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="Price ₹"
+                        required>
+
+
+                    <select
+                        id="productCategory"
+                        required>
+
+                        <option value="Posters">
+                            Posters
+                        </option>
+
+                        <option value="Drawings">
+                            Drawings
+                        </option>
+
+                        <option value="Art Prints">
+                            Art Prints
+                        </option>
+
+                        <option value="Notebooks">
+                            Notebooks
+                        </option>
+
+                    </select>
+
+
+                    <input
+                        id="productImage"
+                        type="url"
+                        placeholder="Image URL"
+                        required>
+
+
+                    <textarea
+                        id="productDescription"
+                        placeholder="Description"
+                        required>
+                    </textarea>
+
+
+                    <button
+                        class="button"
+                        type="submit">
+
+                        ADD PRODUCT
+
+                    </button>
+
+
+                </form>
+
+
+                <p
+                    id="productMessage"
+                    class="message">
+                </p>
+
+            </div>
+
+
+
+            <!-- MANAGE PRODUCTS -->
+
+            <div class="owner-box">
+
+                <h2>
+                    MANAGE PRODUCTS
+                </h2>
+
+                <div
+                    id="adminProducts">
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</section>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<h2>
+ARTORA
+</h2>
+
+<p>
+Premium art for your space.
+</p>
+
+<p>
+© 2026 ARTORA
+</p>
+
+</footer>
+
+
+
+<script>
+
+/* =====================================================
+   SUPABASE CONFIGURATION
+=====================================================
+
+   REPLACE THESE TWO VALUES.
+
+===================================================== */
+
+const SUPABASE_URL =
+    "YOUR_SUPABASE_PROJECT_URL";
+
+const SUPABASE_KEY =
+    "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+
+/* =====================================================
+   SUPABASE CLIENT
+===================================================== */
+
+let db = null;
+
+
+if(
+    SUPABASE_URL !==
+    "YOUR_SUPABASE_PROJECT_URL"
+    &&
+    SUPABASE_KEY !==
+    "YOUR_SUPABASE_PUBLISHABLE_KEY"
+){
+
+    db =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+}
+
+
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
+
+let currentCategory =
+    "Posters";
+
+let categoryProducts = [];
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+
+        .replace(/&/g,"&amp;")
+
+        .replace(/</g,"&lt;")
+
+        .replace(/>/g,"&gt;")
+
+        .replace(/"/g,"&quot;")
+
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   PAGE SYSTEM
+===================================================== */
+
+function showPage(page){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            element =>
+                element.classList.remove(
+                    "active"
+                )
+        );
+
+
+    const target =
+        document.getElementById(page);
+
+
+    if(target){
+
+        target.classList.add(
+            "active"
+        );
+
+    }
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
+
+/* =====================================================
+   CATEGORY
+===================================================== */
+
+async function showCategory(category){
+
+    currentCategory =
+        category;
+
+
+    document
+        .getElementById(
+            "categoryTitle"
+        )
+        .textContent =
+        category.toUpperCase();
+
+
+    document
+        .getElementById(
+            "categoryDescription"
+        )
+        .textContent =
+        "Explore our " +
+        category.toLowerCase() +
+        " collection.";
+
+
+    document
+        .getElementById(
+            "searchInput"
+        )
+        .value = "";
+
+
+    showPage("category");
+
+
+    categoryProducts =
+        await fetchProducts(
+            category
+        );
+
+
+    renderProducts(
+        "categoryProducts",
+        categoryProducts
+    );
+
+}
+
+
+/* =====================================================
+   FETCH PRODUCTS
+===================================================== */
+
+async function fetchProducts(
+    category = null
+){
+
+    if(!db){
+
+        return [];
+
+    }
+
+
+    let query =
+        db
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+    if(category){
+
+        query =
+            query.eq(
+                "category",
+                category
+            );
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await query;
+
+
+    if(error){
+
+        console.error(
+            error
+        );
+
+        return [];
+
+    }
+
+
+    return data || [];
+
+}
+
+
+/* =====================================================
+   PRODUCT CARD
+===================================================== */
+
+function productCard(product){
+
+    return `
+
+    <article class="product-card">
+
+        <img
+            src="${escapeHTML(
+                product.image_url
+            )}"
+
+            alt="${escapeHTML(
+                product.name
+            )}"
+
+            onerror="
+                this.src='https://placehold.co/700x850?text=ARTORA'
+            "
+        >
+
+
+        <div class="product-info">
+
+            <div class="product-category">
+
+                ${escapeHTML(
+                    product.category
+                )}
+
+            </div>
+
+
+            <h3>
+
+                ${escapeHTML(
+                    product.name
+                )}
+
+            </h3>
+
+
+            <div class="price">
+
+                ₹${Number(
+                    product.price
+                ).toLocaleString(
+                    "en-IN"
+                )}
+
+            </div>
+
+
+            <div class="product-actions">
+
+                <button
+                    class="small-button"
+                    onclick="
+                        openProduct(
+                            '${escapeHTML(product.id)}'
+                        )
+                    ">
+
+                    VIEW
+
+                </button>
+
+
+                <button
+                    class="small-button"
+                    onclick="
+                        addToCart(
+                            ${JSON.stringify(product)}
+                        )
+                    ">
+
+                    ADD TO CART
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </article>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RENDER PRODUCTS
+===================================================== */
+
+function renderProducts(
+    elementId,
+    products
+){
+
+    const container =
+        document.getElementById(
+            elementId
+        );
+
+
+    if(!container){
+        return;
+    }
+
+
+    if(!products.length){
+
+        container.innerHTML = `
+
+        <div class="empty">
+
+            <h2>
+                No products yet.
+            </h2>
+
+            <p>
+                Products added by the owner
+                will appear here.
+            </p>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        products
+        .map(productCard)
+        .join("");
+
+}
+
+
+/* =====================================================
+   HOME PRODUCTS
+===================================================== */
+
+async function loadHome(){
+
+    const products =
+        await fetchProducts();
+
+
+    renderProducts(
+        "featuredProducts",
+        products.slice(
+            0,
+            8
+        )
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function filterCategoryProducts(){
+
+    const search =
+        document
+        .getElementById(
+            "searchInput"
+        )
+        .value
+        .toLowerCase();
+
+
+    const filtered =
+        categoryProducts.filter(
+            product =>
+                product.name
+                .toLowerCase()
+                .includes(search)
+        );
+
+
+    renderProducts(
+        "categoryProducts",
+        filtered
+    );
+
+}
+
+
+/* =====================================================
+   PRODUCT DETAIL
+===================================================== */
+
+async function openProduct(id){
+
+    showPage("product");
+
+
+    const container =
+        document.getElementById(
+            "productDetail"
+        );
+
+
+    container.innerHTML = `
+
+        <div class="empty">
+            Loading product...
+        </div>
+
+    `;
+
+
+    if(!db){
+
+        container.innerHTML = `
+
+        <div class="empty">
+
+            <h2>
+                Supabase is not configured.
+            </h2>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await db
+        .from("products")
+        .select("*")
+        .eq(
+            "id",
+            id
+        )
+        .single();
+
+
+    if(error || !data){
+
+        container.innerHTML = `
+
+        <div class="empty">
+
+            <h2>
+                Product not found.
+            </h2>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+    <div class="single-product">
+
+        <div>
+
+            <img
+                src="${escapeHTML(
+                    data.image_url
+                )}"
+
+                alt="${escapeHTML(
+                    data.name
+                )}"
+
+                onerror="
+                    this.src='https://placehold.co/700x850?text=ARTORA'
+                "
+            >
+
+        </div>
+
+
+        <div>
+
+            <div class="product-category">
+
+                ${escapeHTML(
+                    data.category
+                )}
+
+            </div>
+
+
+            <h1>
+
+                ${escapeHTML(
+                    data.name
+                )}
+
+            </h1>
+
+
+            <h2>
+
+                ₹${Number(
+                    data.price
+                ).toLocaleString(
+                    "en-IN"
+                )}
+
+            </h2>
+
+
+            <p class="description">
+
+                ${escapeHTML(
+                    data.description
+                )}
+
+            </p>
+
+
+            <button
+                class="button"
+                onclick="
+                    addToCart(
+                        ${JSON.stringify(data)}
+                    )
+                ">
+
+                ADD TO CART
+
+            </button>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   CART
+===================================================== */
+
+function getCart(){
+
+    try{
+
+        return JSON.parse(
+
+            localStorage.getItem(
+                "artora_cart"
+            ) || "[]"
+
+        );
+
+    }catch{
+
+        return [];
+
+    }
+
+}
+
+
+function saveCart(cart){
+
+    localStorage.setItem(
+
+        "artora_cart",
+
+        JSON.stringify(cart)
+
+    );
+
+
+    updateCartCount();
+
+}
+
+
+function addToCart(product){
+
+    const cart =
+        getCart();
+
+
+    const exists =
+        cart.some(
+            item =>
+                String(item.id) ===
+                String(product.id)
+        );
+
+
+    if(exists){
+
+        alert(
+            "This product is already in your cart."
+        );
+
+        return;
+
+    }
+
+
+    cart.push(product);
+
+
+    saveCart(cart);
+
+
+    alert(
+        "Product added to cart!"
+    );
+
+}
+
+
+function removeFromCart(id){
+
+    const cart =
+        getCart();
+
+
+    const newCart =
+        cart.filter(
+            item =>
+                String(item.id) !==
+                String(id)
+        );
+
+
+    saveCart(
+        newCart
+    );
+
+
+    renderCart();
+
+}
+
+
+function updateCartCount(){
+
+    const count =
+        document.getElementById(
+            "cartCount"
+        );
+
+
+    if(count){
+
+        count.textContent =
+            getCart().length;
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER CART
+===================================================== */
+
+function renderCart(){
+
+    const container =
+        document.getElementById(
+            "cartContent"
+        );
+
+
+    if(!container){
+        return;
+    }
+
+
+    const cart =
+        getCart();
+
+
+    if(!cart.length){
+
+        container.innerHTML = `
+
+        <div class="empty">
+
+            <h2>
+                Your cart is empty.
+            </h2>
+
+            <button
+                class="button"
+                onclick="
+                    showCategory('Posters')
+                ">
+
+                SHOP NOW
+
+            </button>
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let total = 0;
+
+
+    let html = "";
+
+
+    cart.forEach(
+        product => {
+
+            total +=
+                Number(
+                    product.price
+                );
+
+
+            html += `
+
+            <div class="cart-item">
+
+                <img
+                    src="${escapeHTML(
+                        product.image_url
+                    )}"
+                    alt="${escapeHTML(
+                        product.name
+                    )}"
+                >
+
+
+                <div class="cart-details">
+
+                    <h3>
+                        ${escapeHTML(
+                            product.name
+                        )}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(
+                            product.category
+                        )}
+                    </p>
+
+                    <strong>
+
+                        ₹${Number(
+                            product.price
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
+
+                    </strong>
+
+                </div>
+
+
+                <button
+                    class="delete-button"
+                    onclick="
+                        removeFromCart(
+                            '${escapeHTML(product.id)}'
+                        )
+                    ">
+
+                    REMOVE
+
+                </button>
+
+            </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+    <div class="cart-total">
+
+        TOTAL:
+
+        ₹${total.toLocaleString(
+            "en-IN"
+        )}
+
+    </div>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   OWNER LOGIN
+===================================================== */
+
+async function initOwner(){
+
+    if(!db){
+
+        document
+            .getElementById(
+                "loginMessage"
+            )
+            .textContent =
+            "Add your Supabase URL and publishable key first.";
+
+        return;
+
+    }
+
+
+    const {
+        data
+    } =
+        await db
+        .auth
+        .getSession();
+
+
+    updateOwnerUI(
+        data.session
+    );
+
+
+    db.auth.onAuthStateChange(
+        function(
+            event,
+            session
+        ){
+
+            updateOwnerUI(
+                session
+            );
+
+        }
+    );
+
+
+}
+
+
+/* =====================================================
+   OWNER UI
+===================================================== */
+
+async function updateOwnerUI(
+    session
+){
+
+    const loginPanel =
+        document.getElementById(
+            "loginPanel"
+        );
+
+
+    const dashboard =
+        document.getElementById(
+            "dashboard"
+        );
+
+
+    if(!session){
+
+        loginPanel.hidden =
+            false;
+
+        dashboard.hidden =
+            true;
+
+        return;
+
+    }
+
+
+    loginPanel.hidden =
+        true;
+
+    dashboard.hidden =
+        false;
+
+
+    await loadAdminProducts();
+
+}
+
+
+/* =====================================================
+   LOGIN FORM
+===================================================== */
+
+document
+.getElementById(
+    "loginForm"
+)
+.addEventListener(
+    "submit",
+    async function(event){
+
+        event.preventDefault();
+
+
+        const email =
+            document
+            .getElementById(
+                "ownerEmail"
+            )
+            .value;
+
+
+        const password =
+            document
+            .getElementById(
+                "ownerPassword"
+            )
+            .value;
+
+
+        if(!db){
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } =
+            await db
+            .auth
+            .signInWithPassword({
+
+                email:
+                    email,
+
+                password:
+                    password
+
+            });
+
+
+        const message =
+            document.getElementById(
+                "loginMessage"
+            );
+
+
+        if(error){
+
+            message.textContent =
+                error.message;
+
+        }else{
+
+            message.textContent =
+                "";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+document
+.getElementById(
+    "logoutButton"
+)
+.addEventListener(
+    "click",
+    async function(){
+
+        if(db){
+
+            await db
+            .auth
+            .signOut();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   ADD PRODUCT
+===================================================== */
+
+document
+.getElementById(
+    "productForm"
+)
+.addEventListener(
+    "submit",
+    async function(event){
+
+        event.preventDefault();
+
+
+        const message =
+            document
+            .getElementById(
+                "productMessage"
+            );
+
+
+        if(!db){
+
+            message.textContent =
+                "Supabase is not configured.";
+
+            return;
+
+        }
+
+
+        const product = {
+
+            name:
+                document
+                .getElementById(
+                    "productName"
+                )
+                .value
+                .trim(),
+
+            price:
+                Number(
+                    document
+                    .getElementById(
+                        "productPrice"
+                    )
+                    .value
+                ),
+
+            category:
+                document
+                .getElementById(
+                    "productCategory"
+                )
+                .value,
+
+            image_url:
+                document
+                .getElementById(
+                    "productImage"
+                )
+                .value
+                .trim(),
+
+            description:
+                document
+                .getElementById(
+                    "productDescription"
+                )
+                .value
+                .trim()
+
+        };
+
+
+        const {
+            error
+        } =
+            await db
+            .from("products")
+            .insert(
+                product
+            );
+
+
+        if(error){
+
+            message.textContent =
+                error.message;
+
+            return;
+
+        }
+
+
+        message.textContent =
+            "Product added successfully.";
+
+
+        document
+        .getElementById(
+            "productForm"
+        )
+        .reset();
+
+
+        await loadAdminProducts();
+
+        await loadHome();
+
+    }
+);
+
+
+/* =====================================================
+   ADMIN PRODUCTS
+===================================================== */
+
+async function loadAdminProducts(){
+
+    const container =
+        document
+        .getElementById(
+            "adminProducts"
+        );
+
+
+    if(!db){
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await db
+        .from("products")
+        .select("*")
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+    if(error){
+
+        container.innerHTML =
+            `<p>${escapeHTML(
+                error.message
+            )}</p>`;
+
+        return;
+
+    }
+
+
+    if(!data.length){
+
+        container.innerHTML =
+            "<p>No products yet.</p>";
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        data
+        .map(
+            product => `
+
+            <div class="admin-item">
+
+                <img
+                    src="${escapeHTML(
+                        product.image_url
+                    )}"
+                    alt="${escapeHTML(
+                        product.name
+                    )}"
+                >
+
+
+                <div class="admin-info">
+
+                    <strong>
+
+                        ${escapeHTML(
+                            product.name
+                        )}
+
+                    </strong>
+
+                    <p>
+
+                        ${escapeHTML(
+                            product.category
+                        )}
+
+                        ·
+
+                        ₹${Number(
+                            product.price
+                        ).toLocaleString(
+                            "en-IN"
+                        )}
+
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="delete-button"
+                    onclick="
+                        deleteProduct(
+                            '${escapeHTML(product.id)}'
+                        )
+                    ">
+
+                    DELETE
+
+                </button>
+
+            </div>
+
+            `
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   DELETE PRODUCT
+===================================================== */
+
+async function deleteProduct(id){
+
+    if(!db){
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+            "Delete this product?"
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    const {
+        error
+    } =
+        await db
+        .from("products")
+        .delete()
+        .eq(
+            "id",
+            id
+        );
+
+
+    if(error){
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    await loadAdminProducts();
+
+    await loadHome();
+
+    alert(
+        "Product deleted."
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+async function initialize(){
+
+    updateCartCount();
+
+    renderCart();
+
+    await loadHome();
+
+    await initOwner();
+
+}
+
+
+initialize();
+
+</script>
+
+</body>
+</html>
